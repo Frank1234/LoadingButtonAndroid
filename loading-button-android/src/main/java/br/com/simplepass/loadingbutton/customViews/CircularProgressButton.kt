@@ -7,14 +7,12 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.OnLifecycleEvent
 import br.com.simplepass.loadingbutton.animatedDrawables.CircularProgressAnimatedDrawable
 import br.com.simplepass.loadingbutton.animatedDrawables.CircularRevealAnimatedDrawable
 import br.com.simplepass.loadingbutton.animatedDrawables.ProgressType
-import br.com.simplepass.loadingbutton.disposeAnimator
 import br.com.simplepass.loadingbutton.presentation.ProgressButtonPresenter
 import br.com.simplepass.loadingbutton.presentation.State
 
@@ -28,7 +26,11 @@ open class CircularProgressButton : AppCompatButton, ProgressButton {
         init(attrs)
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init(attrs, defStyleAttr)
     }
 
@@ -165,11 +167,22 @@ open class CircularProgressButton : AppCompatButton, ProgressButton {
         revealAnimatedDrawable = createRevealAnimatedDrawable(fillColor, bitmap)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun dispose() {
+    @VisibleForTesting
+    fun disposeForTesting() = dispose()
+
+    override fun onDetachedFromWindow() {
+        dispose()
+        // This should come after disposeAnimator(), otherwise an invalidate message remains in the
+        // queue, which can prevent the entire view hierarchy from being GC'ed during a rotation
+        super.onDetachedFromWindow()
+    }
+
+    private fun dispose() {
         if (presenter.state != State.BEFORE_DRAW) {
-            morphAnimator.disposeAnimator()
-            morphRevertAnimator.disposeAnimator()
+            morphAnimator.end()
+            revertAnimation()
+            morphRevertAnimator.end()
+            postInvalidate()
         }
     }
 
@@ -183,8 +196,10 @@ open class CircularProgressButton : AppCompatButton, ProgressButton {
         if (presenter.validateSetProgress()) {
             progressAnimatedDrawable.progress = value
         } else {
-            throw IllegalStateException("Set progress in being called in the wrong state: ${presenter.state}." +
-                " Allowed states: ${State.PROGRESS}, ${State.MORPHING}, ${State.WAITING_PROGRESS}")
+            throw IllegalStateException(
+                "Set progress in being called in the wrong state: ${presenter.state}." +
+                    " Allowed states: ${State.PROGRESS}, ${State.MORPHING}, ${State.WAITING_PROGRESS}"
+            )
         }
     }
 

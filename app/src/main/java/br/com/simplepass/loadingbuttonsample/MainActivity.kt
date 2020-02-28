@@ -7,12 +7,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import br.com.simplepass.loadingbutton.animatedDrawables.ProgressType
 import br.com.simplepass.loadingbutton.customViews.ProgressButton
 import kotlinx.android.synthetic.main.activity_main.*
-import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,7 +48,10 @@ class MainActivity : AppCompatActivity() {
                 progressAnimator(this).start()
                 Handler().run {
                     postDelayed({
-                        doneLoadingAnimation(defaultColor(context), defaultDoneImage(context.resources))
+                        doneLoadingAnimation(
+                            defaultColor(context),
+                            defaultDoneImage(context.resources)
+                        )
                     }, 2500)
                     postDelayed({ revertAnimation() }, 3500)
                 }
@@ -61,8 +64,10 @@ class MainActivity : AppCompatActivity() {
         buttonTest9.run {
             setOnClickListener {
                 morphAndRevert {
-                    Toast.makeText(this@MainActivity, getString(R.string.start_done),
-                            Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity, getString(R.string.start_done),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -72,13 +77,35 @@ class MainActivity : AppCompatActivity() {
                 morphDoneAndRevert(this@MainActivity)
             }
         }
+
+        buttonTest11.run {
+            setOnClickListener {
+                this.startAnimation()
+                this.postDelayed({
+                    this.stopAnimation()
+                    this.disposeForTesting()
+                }, 200)
+            }
+        }
+
+        buttonTest12.run {
+            setOnClickListener {
+                this.startAnimation()
+                this.postDelayed({
+                    this.stopAnimation()
+                    this.postDelayed({
+                        this.disposeForTesting()
+                    }, 400)
+                }, 400)
+            }
+        }
     }
 }
 
 private fun defaultColor(context: Context) = ContextCompat.getColor(context, android.R.color.black)
 
 private fun defaultDoneImage(resources: Resources) =
-        BitmapFactory.decodeResource(resources, R.drawable.ic_pregnant_woman_white_48dp)
+    BitmapFactory.decodeResource(resources, R.drawable.ic_pregnant_woman_white_48dp)
 
 private fun ProgressButton.morphDoneAndRevert(
     context: Context,
@@ -95,7 +122,10 @@ private fun ProgressButton.morphDoneAndRevert(
     }
 }
 
-private fun ProgressButton.morphAndRevert(revertTime: Long = 3000, startAnimationCallback: () -> Unit = {}) {
+private fun ProgressButton.morphAndRevert(
+    revertTime: Long = 3000,
+    startAnimationCallback: () -> Unit = {}
+) {
     startAnimation(startAnimationCallback)
     Handler().postDelayed(::revertAnimation, revertTime)
 }
@@ -106,10 +136,11 @@ private fun ProgressButton.morphStopRevert(stopTime: Long = 1000, revertTime: Lo
     Handler().postDelayed(::revertAnimation, revertTime)
 }
 
-private fun progressAnimator(progressButton: ProgressButton) = ValueAnimator.ofFloat(0F, 100F).apply {
-    duration = 1500
-    startDelay = 500
-    addUpdateListener { animation ->
-        progressButton.setProgress(animation.animatedValue as Float)
+private fun progressAnimator(progressButton: ProgressButton) =
+    ValueAnimator.ofFloat(0F, 100F).apply {
+        duration = 1500
+        startDelay = 500
+        addUpdateListener { animation ->
+            progressButton.setProgress(animation.animatedValue as Float)
+        }
     }
-}

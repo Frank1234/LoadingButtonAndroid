@@ -120,7 +120,7 @@ internal fun ProgressButton.init(attrs: AttributeSet? = null, defStyleAttr: Int 
 
     // all ProgressButton instances implement LifecycleObserver, so we can
     // auto-register each instance on initialization
-    getContext().addLifecycleObserver(this)
+    // getContext().addLifecycleObserver(this) // this is a big memory leak!
 }
 
 internal fun ProgressButton.config(tArray: TypedArray) {

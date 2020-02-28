@@ -67,17 +67,16 @@
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             android:background="@drawable/button_shape_no_fill"
+            android:drawableLeft="@android:drawable/arrow_up_float"
+            android:drawableRight="@android:drawable/arrow_up_float"
+            android:padding="10dp"
             android:text="@string/send"
             android:textColor="@android:color/black"
             app:finalCornerAngle="50dp"
             app:initialCornerAngle="0dp"
             app:spinning_bar_color="@android:color/holo_blue_bright"
             app:spinning_bar_padding="8dp"
-            app:spinning_bar_width="4dp"
-            android:drawableLeft="@android:drawable/arrow_up_float"
-            android:drawableRight="@android:drawable/arrow_up_float"
-            android:padding="10dp"
-            />
+            app:spinning_bar_width="4dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -149,10 +148,10 @@
             app:spinning_bar_width="5dp" />
 
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Test 5 - Morph, loading, done and revert. Done and revert very fast " />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Test 5 - Morph, loading, done and revert. Done and revert very fast " />
 
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/buttonTest5"
@@ -271,6 +270,46 @@
 
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/buttonTest10"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/send"
+            android:textColor="@android:color/white"
+            app:spinning_bar_color="#FFFFFFFF"
+            app:spinning_bar_padding="5dp"
+            app:spinning_bar_width="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Test 11 - dispose before animation ended" />
+
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/buttonTest11"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/send"
+            android:textColor="@android:color/white"
+            app:spinning_bar_color="#FFFFFFFF"
+            app:spinning_bar_padding="5dp"
+            app:spinning_bar_width="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Test 12 - dispose before revert animation ended" />
+
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+            android:id="@+id/buttonTest12"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="50dp"
