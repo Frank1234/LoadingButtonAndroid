@@ -34,6 +34,8 @@ open class CircularProgressButton : AppCompatButton, ProgressButton {
         init(attrs, defStyleAttr)
     }
 
+    private var stateOnDispose: State? = null
+
     override var paddingProgress = 0F
 
     override var spinningBarWidth = 10F
@@ -179,10 +181,19 @@ open class CircularProgressButton : AppCompatButton, ProgressButton {
 
     private fun dispose() {
         if (presenter.state != State.BEFORE_DRAW) {
+            stateOnDispose = presenter.state
             morphAnimator.end()
             revertAnimation()
             morphRevertAnimator.end()
             postInvalidate()
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (stateOnDispose == State.PROGRESS || stateOnDispose == State.WAITING_PROGRESS) {
+            // rough solution for use in a recyclerview, start the progress animation again
+            startAnimation(savedAnimationEndListener)
         }
     }
 
