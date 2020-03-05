@@ -193,7 +193,7 @@ open class CircularProgressButton : AppCompatButton, ProgressButton {
         super.onAttachedToWindow()
         if (stateOnDispose == State.PROGRESS || stateOnDispose == State.WAITING_PROGRESS) {
             // rough solution for use in a recyclerview, start the progress animation again
-            startAnimation(savedAnimationEndListener)
+            startAnimation()
             stateOnDispose = null
         }
     }
